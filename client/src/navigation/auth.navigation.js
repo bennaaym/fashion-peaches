@@ -6,7 +6,7 @@ const Stack = createStackNavigator();
 const AuthStack = () => {
   return (
     <Stack.Navigator
-      initialRouteName="SignUp"
+      initialRouteName="Options"
       screenOptions={{
         headerShown: false,
       }}

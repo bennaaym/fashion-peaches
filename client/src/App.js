@@ -3,6 +3,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import AppLoading from 'expo-app-loading';
 import { useCustomFont } from './hooks';
 import { AuthStack } from './navigation';
+import { AuthContextProvider } from './contexts';
 
 export const App = () => {
   const [fontsLoaded] = useCustomFont();
@@ -11,7 +12,9 @@ export const App = () => {
 
   return (
     <NavigationContainer>
-      <AuthStack />
+      <AuthContextProvider>
+        <AuthStack />
+      </AuthContextProvider>
     </NavigationContainer>
   );
 };

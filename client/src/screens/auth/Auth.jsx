@@ -5,16 +5,17 @@ import {
   TextInput,
   TouchableOpacity,
 } from 'react-native';
-import { MaterialCommunityIcons, AntDesign } from '@expo/vector-icons/';
+import { AntDesign } from '@expo/vector-icons/';
 import { Formik } from 'formik';
 import { appTheme } from '../../common/styles/theme';
 import { PrimaryButton, SocialMediaButton } from '../../components/buttons';
 import * as yup from 'yup';
-import SignUp from './SignUp';
+import { useAuthContext } from '../../contexts';
 
 const Auth = ({ route, navigation }) => {
   // const { userType } = route.params;
   console.log(route);
+  const { signIn, signUp } = useAuthContext();
   const isSignUp = route.name === 'SignUp';
 
   const validationSchema = isSignUp
@@ -97,7 +98,16 @@ const Auth = ({ route, navigation }) => {
               : { username: '', password: '' }
           }
           validationSchema={validationSchema}
-          onSubmit={(values) => console.log(values)}
+          onSubmit={async (values) => {
+            if (isSignUp) {
+              await signUp({
+                ...values,
+                userType: route.params.userType,
+              });
+            } else {
+              await signIn(values);
+            }
+          }}
         >
           {({ handleChange, handleBlur, handleSubmit, values, errors }) => (
             <View>
