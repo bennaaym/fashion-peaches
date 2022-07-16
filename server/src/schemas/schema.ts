@@ -16,6 +16,7 @@ export const typeDefs = gql`
     signOut(refreshToken: String!): AuthPayload!
     generateRefreshToken(refreshToken: String!): AuthPayload!
     forgotPassword(phone: String!): AuthPayload!
+    resetPassword(resetToken: String!, newPassword: String!): AuthPayload!
   }
 
   """

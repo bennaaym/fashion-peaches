@@ -16,11 +16,10 @@ class TwilioService {
   ): Promise<boolean> => {
     try {
       const message = await this.client.messages.create({
-        body: 'Fashion Peaches Password Reset Token',
+        body: `Fashion Peaches Password Reset Token: ${resetToken}`,
         to: targetPhoneNumber,
         from: `${process.env.TWILIO_TRAIL_NUMBER}`,
       });
-      console.log(message);
       return true;
     } catch (error) {
       console.log(error);

@@ -1,11 +1,13 @@
 import validator from 'validator';
 import bcrypt from 'bcrypt';
+import crypto from 'crypto';
 import { UserType } from '@prisma/client';
 import {
   IAuthResponse,
   IContext,
   IForgotPassword,
   IGenerateRefreshToken,
+  IResetPassword,
   ISignIn,
   ISignOut,
   ISignUp,
@@ -320,6 +322,62 @@ export const AuthMutation = {
       await prisma.user.update({
         where: { phone },
         data: { passwordResetToken: hashedResetToken },
+      });
+
+      return {
+        tokens: null,
+        errors: [],
+      };
+    } catch (error: any) {
+      console.log(error);
+      return {
+        tokens: null,
+        errors: [{ message: 'Internal server error' }],
+      };
+    }
+  },
+
+  resetPassword: async (
+    _: any,
+    { resetToken, newPassword }: IResetPassword,
+    { prisma }: IContext
+  ): Promise<IAuthResponse> => {
+    try {
+      const hashedResetToken = crypto
+        .createHash('sha256')
+        .update(resetToken)
+        .digest('hex');
+
+      const user = await prisma.user.findFirst({
+        where: { passwordResetToken: hashedResetToken },
+      });
+
+      if (!user) {
+        return {
+          tokens: null,
+          errors: [{ message: 'Invalid reset password token' }],
+        };
+      }
+
+      if (!validator.isLength(newPassword, { min: 8 })) {
+        return {
+          tokens: null,
+          errors: [
+            { message: 'Password must consist of 8 characters or more' },
+          ],
+        };
+      }
+
+      const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+      await prisma.user.update({
+        where: {
+          id: user.id,
+        },
+        data: {
+          password: hashedPassword,
+          passwordResetToken: '',
+        },
       });
 
       return {
