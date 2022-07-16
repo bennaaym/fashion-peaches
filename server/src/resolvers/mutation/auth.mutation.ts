@@ -1,18 +1,14 @@
 import validator from 'validator';
 import bcrypt from 'bcrypt';
-import JWT from 'jsonwebtoken';
 import { UserType } from '@prisma/client';
-import { IAuthResponse, IContext, ISignIn, ISignUp } from '../../types';
-
-export const signAccessToken = (userId: number) =>
-  JWT.sign({ userId }, `${process.env.JWT_ACCESS_TOKEN_SECRET}`, {
-    expiresIn: `${process.env.JWT_ACCESS_TOKEN_EXPIRES_IN}`,
-  });
-
-export const signRefreshToken = (userId: number) =>
-  JWT.sign({ userId }, `${process.env.JWT_REFRESH_TOKEN_SECRET}`, {
-    expiresIn: `${process.env.JWT_REFRESH_TOKEN_EXPIRES_IN}`,
-  });
+import {
+  IAuthResponse,
+  IContext,
+  ISignIn,
+  ISignOut,
+  ISignUp,
+} from '../../types';
+import { JWT_UTIL } from '../../util';
 
 export const AuthMutation = {
   signUp: async (
@@ -90,8 +86,8 @@ export const AuthMutation = {
       });
 
       // generate tokens
-      const accessToken = signAccessToken(newUser.id);
-      const refreshToken = signRefreshToken(newUser.id);
+      const accessToken = JWT_UTIL.signAccessToken(newUser.id);
+      const refreshToken = JWT_UTIL.signRefreshToken(newUser.id);
 
       // save refresh token to db
       await prisma.user.update({
@@ -144,8 +140,8 @@ export const AuthMutation = {
       }
 
       // generate tokens
-      const accessToken = signAccessToken(user.id);
-      const refreshToken = signRefreshToken(user.id);
+      const accessToken = JWT_UTIL.signAccessToken(user.id);
+      const refreshToken = JWT_UTIL.signRefreshToken(user.id);
 
       // save refresh token to db
       await prisma.user.update({
@@ -162,6 +158,52 @@ export const AuthMutation = {
           access: accessToken,
           refresh: refreshToken,
         },
+        errors: [],
+      };
+    } catch (error: any) {
+      console.log(error);
+      return {
+        tokens: null,
+        errors: [{ message: 'Internal server error' }],
+      };
+    }
+  },
+
+  signOut: async (_: any, { refreshToken }: ISignOut, { prisma }: IContext) => {
+    try {
+      const data = JWT_UTIL.verifyRefreshToken(refreshToken);
+
+      if (!data) {
+        return {
+          tokens: null,
+          errors: [{ message: 'Invalid refresh token' }],
+        };
+      }
+
+      const user = await prisma.user.findUnique({
+        where: {
+          id: data.userId,
+        },
+      });
+
+      if (!user || user?.refreshToken !== refreshToken) {
+        return {
+          tokens: null,
+          errors: [{ message: 'Invalid refresh token' }],
+        };
+      }
+
+      await prisma.user.update({
+        where: {
+          id: user?.id,
+        },
+        data: {
+          refreshToken: '',
+        },
+      });
+
+      return {
+        tokens: null,
         errors: [],
       };
     } catch (error: any) {
