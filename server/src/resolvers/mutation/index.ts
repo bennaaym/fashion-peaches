@@ -1,5 +1,5 @@
-import { DummyMutation } from './dummy.mutation';
+import { AuthMutation } from './auth.mutation';
 
 export const Mutation = {
-  ...DummyMutation,
+  ...AuthMutation,
 };
