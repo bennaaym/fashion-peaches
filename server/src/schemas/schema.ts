@@ -6,6 +6,28 @@ export const typeDefs = gql`
   }
 
   type Mutation {
-    dummy: String!
+    signUp(
+      username: String!
+      phone: String!
+      password: String!
+      userType: String!
+    ): AuthPayload!
+  }
+
+  """
+  Payloads
+  """
+  type AuthPayload {
+    tokens: Tokens
+    errors: [Error!]!
+  }
+
+  type Tokens {
+    access: String!
+    refresh: String!
+  }
+
+  type Error {
+    message: String!
   }
 `;
