@@ -1,3 +1,4 @@
+import 'react-native-gesture-handler';
 import { registerRootComponent } from 'expo';
 import { ApolloProvider } from '@apollo/client';
 import { client } from './apollo';

@@ -1,19 +1,18 @@
-import { View, Text } from 'react-native';
-import { gql, useQuery } from '@apollo/client';
-
-const GET_POSTS = gql`
-  query {
-    hello
-  }
-`;
+import 'react-native-gesture-handler';
+import { NavigationContainer } from '@react-navigation/native';
+import AppLoading from 'expo-app-loading';
+import { useCustomFont } from './hooks';
+import { AuthStack } from './navigation';
 
 export const App = () => {
-  const { data, error, loading } = useQuery(GET_POSTS);
-  console.log(data, error, loading);
+  const [fontsLoaded] = useCustomFont();
+
+  if (!fontsLoaded) return <AppLoading />;
+
   return (
-    <View>
-      <Text>Hello World!</Text>
-    </View>
+    <NavigationContainer>
+      <AuthStack />
+    </NavigationContainer>
   );
 };
 
