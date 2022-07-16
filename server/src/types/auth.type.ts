@@ -23,3 +23,7 @@ export interface ISignOut {
 }
 
 export interface IGenerateRefreshToken extends ISignOut {}
+
+export interface IForgotPassword {
+  phone: string;
+}

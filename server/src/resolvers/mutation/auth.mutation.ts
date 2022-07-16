@@ -4,12 +4,14 @@ import { UserType } from '@prisma/client';
 import {
   IAuthResponse,
   IContext,
+  IForgotPassword,
   IGenerateRefreshToken,
   ISignIn,
   ISignOut,
   ISignUp,
 } from '../../types';
-import { JWT_UTIL } from '../../util';
+import { AUTH_UTIL, JWT_UTIL } from '../../utils';
+import { TwilioService } from '../../services';
 
 export const AuthMutation = {
   signUp: async (
@@ -170,7 +172,11 @@ export const AuthMutation = {
     }
   },
 
-  signOut: async (_: any, { refreshToken }: ISignOut, { prisma }: IContext) => {
+  signOut: async (
+    _: any,
+    { refreshToken }: ISignOut,
+    { prisma }: IContext
+  ): Promise<IAuthResponse> => {
     try {
       const data = JWT_UTIL.verifyRefreshToken(refreshToken);
 
@@ -220,7 +226,7 @@ export const AuthMutation = {
     _: any,
     { refreshToken }: IGenerateRefreshToken,
     { prisma }: IContext
-  ) => {
+  ): Promise<IAuthResponse> => {
     try {
       const data = JWT_UTIL.verifyRefreshToken(refreshToken);
 
@@ -261,6 +267,63 @@ export const AuthMutation = {
           access: accessToken,
           refresh: newRefreshToken,
         },
+        errors: [],
+      };
+    } catch (error: any) {
+      console.log(error);
+      return {
+        tokens: null,
+        errors: [{ message: 'Internal server error' }],
+      };
+    }
+  },
+
+  forgotPassword: async (
+    _: any,
+    { phone }: IForgotPassword,
+    { prisma }: IContext
+  ): Promise<IAuthResponse> => {
+    try {
+      const user = await prisma.user.findUnique({
+        where: {
+          phone,
+        },
+      });
+      if (!user) {
+        return {
+          tokens: null,
+          errors: [{ message: 'Invalid phone number' }],
+        };
+      }
+
+      //
+      const { resetToken, hashedResetToken } =
+        await AUTH_UTIL.generateResetPasswordToken();
+
+      const tokenSentWithSuccess = await TwilioService.sendResetToken(
+        resetToken,
+        user.phone
+      );
+
+      if (!tokenSentWithSuccess) {
+        return {
+          tokens: null,
+          errors: [
+            {
+              message:
+                'Error occurred while sending password reset token, please try again!',
+            },
+          ],
+        };
+      }
+
+      await prisma.user.update({
+        where: { phone },
+        data: { passwordResetToken: hashedResetToken },
+      });
+
+      return {
+        tokens: null,
         errors: [],
       };
     } catch (error: any) {
