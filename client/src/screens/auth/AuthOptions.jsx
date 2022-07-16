@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet, Image, ScrollView } from 'react-native';
 import { appTheme } from '../../common/styles/theme';
-import { PrimaryButton, SecondaryButton } from '../../components';
+import { PrimaryButton, SecondaryButton } from '../../components/buttons';
 
 const AuthOptions = ({ navigation }) => {
   return (
@@ -17,7 +17,7 @@ const AuthOptions = ({ navigation }) => {
       <PrimaryButton
         label="Log in"
         style={{ marginVertical: 10 }}
-        onPress={() => {}}
+        onPress={() => navigation.navigate('SignIn')}
       />
       <SecondaryButton
         label="Create account"

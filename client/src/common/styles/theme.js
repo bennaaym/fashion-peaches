@@ -3,6 +3,10 @@ export const appTheme = {
     white: '#FFFFFF',
     pink: '#A42FCD',
     black: '#0D0E10',
+    blue: '#3B5998',
+    cyan: '#2D9CDB',
+    red: '#F87171',
+    transparent: 'transparent',
   },
 
   fonts: {

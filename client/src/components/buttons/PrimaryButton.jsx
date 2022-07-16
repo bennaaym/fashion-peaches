@@ -1,9 +1,9 @@
 import { Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { appTheme } from '../common/styles/theme';
+import { appTheme } from '../../common/styles/theme';
 
-const SecondaryButton = ({ label, onPress }) => {
+const PrimaryButton = ({ label, style, onPress }) => {
   return (
-    <TouchableOpacity style={[styles.container, styles]} onPress={onPress}>
+    <TouchableOpacity style={[styles.container, style]} onPress={onPress}>
       <Text style={styles.label}>{label}</Text>
     </TouchableOpacity>
   );
@@ -12,17 +12,17 @@ const styles = StyleSheet.create({
   container: {
     width: '80%',
     height: 50,
-    backgroundColor: appTheme.colors.white,
+    backgroundColor: appTheme.colors.pink,
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 8,
   },
 
   label: {
-    color: appTheme.colors.black,
+    color: appTheme.colors.white,
     ...appTheme.fonts.body1,
     fontFamily: 'Montserrat_600SemiBold',
   },
 });
 
-export default SecondaryButton;
+export default PrimaryButton;

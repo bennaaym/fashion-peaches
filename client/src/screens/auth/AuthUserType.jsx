@@ -1,6 +1,6 @@
 import { StyleSheet, View, Text, Image } from 'react-native';
 import { appTheme } from '../../common/styles/theme';
-import { PrimaryButton } from '../../components';
+import { PrimaryButton } from '../../components/buttons';
 
 const AuthUserType = ({ navigation }) => {
   return (
@@ -13,8 +13,15 @@ const AuthUserType = ({ navigation }) => {
         <View style={styles.overlay}></View>
       </View>
       <Text style={styles.title}>Who are you?</Text>
-      <PrimaryButton label="Customer" style={{ marginVertical: 20 }} />
-      <PrimaryButton label="Designer" />
+      <PrimaryButton
+        label="Customer"
+        style={{ marginVertical: 20 }}
+        onPress={() => navigation.navigate('SignUp', { userType: 'CUSTOMER' })}
+      />
+      <PrimaryButton
+        label="Designer"
+        onPress={() => navigation.navigate('SignUp', { userType: 'DESIGNER' })}
+      />
     </View>
   );
 };
