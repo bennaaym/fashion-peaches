@@ -4,11 +4,14 @@ import { registerRootComponent } from 'expo';
 import { ApolloProvider } from '@apollo/client';
 import { client } from './apollo';
 import App from './App';
+import { AuthContextProvider } from './contexts';
 
 const Root = () => (
   <ApolloProvider client={client}>
     <StatusBar hidden />
-    <App />
+    <AuthContextProvider>
+      <App />
+    </AuthContextProvider>
   </ApolloProvider>
 );
 

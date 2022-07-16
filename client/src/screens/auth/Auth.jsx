@@ -4,6 +4,7 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
 import { AntDesign } from '@expo/vector-icons/';
 import { Formik } from 'formik';
@@ -13,11 +14,11 @@ import * as yup from 'yup';
 import { useAuthContext } from '../../contexts';
 
 const Auth = ({ route, navigation }) => {
-  // const { userType } = route.params;
-  console.log(route);
-  const { signIn, signUp } = useAuthContext();
+  const { signIn, signUp, auth } = useAuthContext();
   const isSignUp = route.name === 'SignUp';
-
+  if (auth?.errors?.length) {
+    Alert.alert('Auth Error', auth.errors[0].message);
+  }
   const validationSchema = isSignUp
     ? yup.object().shape({
         username: yup
@@ -98,14 +99,14 @@ const Auth = ({ route, navigation }) => {
               : { username: '', password: '' }
           }
           validationSchema={validationSchema}
-          onSubmit={async (values) => {
+          onSubmit={(values) => {
             if (isSignUp) {
-              await signUp({
+              signUp({
                 ...values,
                 userType: route.params.userType,
               });
             } else {
-              await signIn(values);
+              signIn(values);
             }
           }}
         >
@@ -185,7 +186,7 @@ const Auth = ({ route, navigation }) => {
       <View style={styles.bottomTextContainer}>
         <Text style={styles.bottomText}>Already have an account?</Text>
         <TouchableOpacity
-          onPress={() => navigation.navigate(isSignUp ? 'SignIn' : 'SignUp')}
+          onPress={() => navigation.navigate(isSignUp ? 'SignIn' : 'UserType')}
         >
           <Text style={[styles.bottomText, { color: appTheme.colors.cyan }]}>
             {isSignUp ? 'Log in' : 'Sign up'}

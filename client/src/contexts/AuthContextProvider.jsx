@@ -1,16 +1,24 @@
-import { createContext, useContext } from 'react';
+import { useMutation } from '@apollo/client';
+import { useState, createContext, useContext, useEffect } from 'react';
+import { SIGN_IN, SIGN_UP } from '../apollo/mutations';
 
 const AuthContext = createContext();
 
 export const useAuthContext = () => useContext(AuthContext);
 
 const AuthContextProvider = ({ children }) => {
+  const [signUpMutation, signUpResponse] = useMutation(SIGN_UP);
+  const [SignInMutation, signInResponse] = useMutation(SIGN_IN);
+  const [isSignUp, setIsSignUp] = useState(true);
+
   const signUp = (signUpBody) => {
-    console.log(signUpBody);
+    setIsSignUp((prev) => !prev);
+    signUpMutation({ variables: signUpBody });
   };
 
   const signIn = (signInBody) => {
-    console.log(signInBody);
+    setIsSignUp((prev) => !prev);
+    SignInMutation({ variables: signInBody });
   };
 
   return (
@@ -18,6 +26,13 @@ const AuthContextProvider = ({ children }) => {
       value={{
         signIn,
         signUp,
+        auth: isSignUp
+          ? {
+              ...signUpResponse?.data?.signUp,
+            }
+          : {
+              ...signInResponse?.data?.signIn,
+            },
       }}
     >
       {children}
