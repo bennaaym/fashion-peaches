@@ -1,0 +1,1 @@
+export { useCustomFont } from './useCustomFont';
