@@ -2,7 +2,7 @@ import validator from 'validator';
 import bcrypt from 'bcrypt';
 import JWT from 'jsonwebtoken';
 import { UserType } from '@prisma/client';
-import { IAuthResponse, IContext, ISignUp } from '../../types';
+import { IAuthResponse, IContext, ISignIn, ISignUp } from '../../types';
 
 export const signAccessToken = (userId: number) =>
   JWT.sign({ userId }, `${process.env.JWT_ACCESS_TOKEN_SECRET}`, {
@@ -97,6 +97,60 @@ export const AuthMutation = {
       await prisma.user.update({
         where: {
           id: newUser.id,
+        },
+        data: {
+          refreshToken,
+        },
+      });
+
+      return {
+        tokens: {
+          access: accessToken,
+          refresh: refreshToken,
+        },
+        errors: [],
+      };
+    } catch (error: any) {
+      console.log(error);
+      return {
+        tokens: null,
+        errors: [{ message: 'Internal server error' }],
+      };
+    }
+  },
+
+  signIn: async (
+    _: any,
+    { username, password }: ISignIn,
+    { prisma }: IContext
+  ): Promise<IAuthResponse> => {
+    try {
+      // check if a user with such username exist
+      const user = await prisma.user.findUnique({ where: { username } });
+      if (!user) {
+        return {
+          tokens: null,
+          errors: [{ message: 'Invalid credentials' }],
+        };
+      }
+
+      // if user exist match the input password with the hashed password in the db
+      const isCorrectPassword = await bcrypt.compare(password, user.password);
+      if (!isCorrectPassword) {
+        return {
+          tokens: null,
+          errors: [{ message: 'Invalid credentials' }],
+        };
+      }
+
+      // generate tokens
+      const accessToken = signAccessToken(user.id);
+      const refreshToken = signRefreshToken(user.id);
+
+      // save refresh token to db
+      await prisma.user.update({
+        where: {
+          id: user.id,
         },
         data: {
           refreshToken,

@@ -12,3 +12,8 @@ export interface ISignUp {
   password: string;
   userType: 'ADMIN' | 'CUSTOMER' | 'DESIGNER';
 }
+
+export interface ISignIn {
+  username: string;
+  password: string;
+}
