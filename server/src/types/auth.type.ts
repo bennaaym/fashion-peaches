@@ -21,3 +21,5 @@ export interface ISignIn {
 export interface ISignOut {
   refreshToken: string;
 }
+
+export interface IGenerateRefreshToken extends ISignOut {}

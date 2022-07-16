@@ -4,6 +4,7 @@ import { UserType } from '@prisma/client';
 import {
   IAuthResponse,
   IContext,
+  IGenerateRefreshToken,
   ISignIn,
   ISignOut,
   ISignUp,
@@ -204,6 +205,62 @@ export const AuthMutation = {
 
       return {
         tokens: null,
+        errors: [],
+      };
+    } catch (error: any) {
+      console.log(error);
+      return {
+        tokens: null,
+        errors: [{ message: 'Internal server error' }],
+      };
+    }
+  },
+
+  generateRefreshToken: async (
+    _: any,
+    { refreshToken }: IGenerateRefreshToken,
+    { prisma }: IContext
+  ) => {
+    try {
+      const data = JWT_UTIL.verifyRefreshToken(refreshToken);
+
+      if (!data) {
+        return {
+          tokens: null,
+          errors: [{ message: 'Invalid refresh token' }],
+        };
+      }
+
+      const user = await prisma.user.findUnique({
+        where: {
+          id: data.userId,
+        },
+      });
+
+      if (!user || user?.refreshToken !== refreshToken) {
+        return {
+          tokens: null,
+          errors: [{ message: 'Invalid refresh token' }],
+        };
+      }
+
+      const accessToken = JWT_UTIL.signAccessToken(user.id);
+      const newRefreshToken = JWT_UTIL.signRefreshToken(user.id);
+
+      await prisma.user.update({
+        where: {
+          id: user?.id,
+        },
+        data: {
+          refreshToken,
+        },
+      });
+
+      return {
+        tokens: {
+          access: accessToken,
+          refresh: newRefreshToken,
+        },
         errors: [],
       };
     } catch (error: any) {
