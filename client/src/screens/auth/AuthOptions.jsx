@@ -2,7 +2,7 @@ import { View, Text, StyleSheet, Image, ScrollView } from 'react-native';
 import { appTheme } from '../../common/styles/theme';
 import { PrimaryButton, SecondaryButton } from '../../components';
 
-const AuthOptions = () => {
+const AuthOptions = ({ navigation }) => {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.header}>
@@ -14,8 +14,15 @@ const AuthOptions = () => {
         source={require('../../assets/images/auth_options_illustration.png')}
       />
       <View style={styles.vSpace} />
-      <PrimaryButton label="Log in" style={{ marginVertical: 10 }} />
-      <SecondaryButton label="Create account" />
+      <PrimaryButton
+        label="Log in"
+        style={{ marginVertical: 10 }}
+        onPress={() => {}}
+      />
+      <SecondaryButton
+        label="Create account"
+        onPress={() => navigation.navigate('UserType')}
+      />
     </ScrollView>
   );
 };

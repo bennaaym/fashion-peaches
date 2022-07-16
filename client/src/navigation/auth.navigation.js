@@ -1,16 +1,18 @@
 import { createStackNavigator } from '@react-navigation/stack';
-import { AuthOptions } from '../screens';
+import { AuthOptions, AuthUserType } from '../screens';
 
 const Stack = createStackNavigator();
 
 const AuthStack = () => {
   return (
     <Stack.Navigator
+      initialRouteName="Options"
       screenOptions={{
         headerShown: false,
       }}
     >
-      <Stack.Screen name="Auth Options" component={AuthOptions} />
+      <Stack.Screen name="Options" component={AuthOptions} />
+      <Stack.Screen name="UserType" component={AuthUserType} />
     </Stack.Navigator>
   );
 };
