@@ -38,3 +38,4 @@ Back-End -
 - Twilio API(for verification)
   Cloud -
 - Firebase Realtime Database (for the chat feature)
+- JWT Authentication
