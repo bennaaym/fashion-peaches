@@ -1,10 +1,10 @@
-import { StyleSheet, View, Text, Image } from 'react-native';
-import { appTheme } from '../../common/styles/theme';
-import { PrimaryButton, BackgroundImage } from '../../components';
+import { StyleSheet, View } from 'react-native';
+import { PrimaryButton, BackgroundImage, Header } from '../../components';
 
 const HomeOptions = ({ navigation }) => {
   return (
     <View style={styles.container}>
+      <Header navigation={navigation} />
       <BackgroundImage
         image={require('../../assets/images/home_options_illustration.png')}
       />
