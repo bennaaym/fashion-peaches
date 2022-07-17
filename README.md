@@ -5,6 +5,7 @@
 Hey there! Thanks for checking out our project!
 
 # Functions ⚒️
+![gigg](https://user-images.githubusercontent.com/100528412/179391869-55906e06-2a9d-4707-837f-9ede3d143fd8.gif)
 
 Fashion-Peaches is a place for professional and aspiring fashion designers to share there work and attract possible clients, deals and following for their designs.
 <br>
@@ -12,8 +13,10 @@ Designers can upload their designs on the homepage as a post to attract their ta
 <br>
 In order to connect with the designers and maintain there privacy we have a <b>chat feature</b>.
 <br>
+
+
 <br/>
-![demo](https://i.ibb.co/9Tpxgvn/ezgif-com-gif-maker.gif)
+
 
 # What we used ⚙️
 
