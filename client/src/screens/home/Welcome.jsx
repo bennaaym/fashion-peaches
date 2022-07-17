@@ -2,21 +2,15 @@ import { StyleSheet, View, Text, Image } from 'react-native';
 import { appTheme } from '../../common/styles/theme';
 import { PrimaryButton, BackgroundImage } from '../../components';
 
-const AuthUserType = ({ navigation }) => {
+const Welcome = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <BackgroundImage
-        image={require('../../assets/images/auth_user_type_illustration.png')}
-      />
-      <Text style={styles.title}>Who are you?</Text>
-      <PrimaryButton
-        label="Customer"
-        style={{ marginVertical: 20 }}
-        onPress={() => navigation.navigate('SignUp', { userType: 'CUSTOMER' })}
+        image={require('../../assets/images/home_welcome_illustration.png')}
       />
       <PrimaryButton
-        label="Designer"
-        onPress={() => navigation.navigate('SignUp', { userType: 'DESIGNER' })}
+        label="Get started"
+        onPress={() => navigation.navigate('Category')}
       />
     </View>
   );
@@ -35,4 +29,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AuthUserType;
+export default Welcome;

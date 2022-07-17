@@ -12,7 +12,7 @@ export const App = () => {
 
   return (
     <NavigationContainer>
-      {auth?.tokens ? <AppStack /> : <AuthStack />}
+      {auth?.tokens || true ? <AppStack /> : <AuthStack />}
     </NavigationContainer>
   );
 };
