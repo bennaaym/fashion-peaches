@@ -24,6 +24,7 @@ Front-End -
 Back-End -
    - TypeScript
    - GraphQL Apollo Server
-   - CockroachDB
+   - CockroachDB with prisma ORM
+   - Twilio API(for verification)
 Cloud -
    - Firebase Realtime Database (for the chat feature)
