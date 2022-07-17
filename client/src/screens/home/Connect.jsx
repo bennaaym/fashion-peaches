@@ -1,8 +1,10 @@
 import { StyleSheet, View, Text } from 'react-native';
 import { appTheme } from '../../common/styles/theme';
-const Connect = () => {
+import { Header } from '../../components';
+const Connect = ({ navigation }) => {
   return (
     <View style={styles.container}>
+      <Header navigation={navigation} />
       <Text style={styles.label}>
         Connect: This screen still under development
       </Text>

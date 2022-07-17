@@ -1,5 +1,5 @@
 import { StyleSheet, ScrollView, View, Text, FlatList } from 'react-native';
-import { CategoryItem } from '../../components';
+import { CategoryItem, Header } from '../../components';
 import { category } from '../../db';
 import { appTheme } from '../../common/styles/theme';
 
@@ -10,6 +10,7 @@ const Category = ({ navigation }) => {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
+      <Header navigation={navigation} />
       <Text style={styles.title}>What are you looking for?</Text>
       {category.map((item, index) => {
         if ((index + 1) % 3 === 0) return;

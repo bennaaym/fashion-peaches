@@ -1,6 +1,6 @@
 import { StyleSheet, View, Text, Image } from 'react-native';
 import { appTheme } from '../../common/styles/theme';
-import { PrimaryButton, BackgroundImage } from '../../components';
+import { PrimaryButton, BackgroundImage, Header } from '../../components';
 
 const Welcome = ({ navigation }) => {
   return (
