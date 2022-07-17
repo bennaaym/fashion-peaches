@@ -5,3 +5,6 @@ export { default as SignIn } from './auth/SignIn';
 export { default as Home } from './home/Home';
 export { default as Welcome } from './home/Welcome';
 export { default as Category } from './home/Category';
+export { default as HomeOptions } from './home/HomeOptions';
+export { default as Social } from './home/Social';
+export { default as Connect } from './home/Connect';
